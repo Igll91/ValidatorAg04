@@ -22,9 +22,25 @@ public final class ValidationControlCenter {
 	private static String FIRST_PARAMETER = "type=";
 	private static String SECOND_PARAMETER = "value=";
 	private static String ALLOWED_EXTENSION = "txt";
-
+	private static String FS;
+	private static String OS = System.getProperty("os.name").toLowerCase();
+	
 	private String fileForValidationPath;
 
+	static{
+		if (isWindows()) {
+			FS = "\\";
+		} else if (isMac()) {
+			FS = "/";
+		} else if (isUnix()) {
+			FS = "/";
+		} else if (isSolaris()) {
+			FS = "/";
+		} else {
+			// OS not supported
+		}
+	}
+	
 	/**
 	 * 
 	 * @param path path to the file that will be validated
@@ -86,8 +102,8 @@ public final class ValidationControlCenter {
 	{
 		File file = new File(fileForValidationPath);
 		String fileFullPath = file.getAbsolutePath();
-		String filePath = fileFullPath.substring(0, fileFullPath.lastIndexOf("/"));
-		filePath +="/ValidationResults.txt";
+		String filePath = fileFullPath.substring(0, fileFullPath.lastIndexOf(FS));
+		filePath += FS + "ValidationResults.txt";
 		
 		// Create file
         FileWriter fstream = new FileWriter(filePath, false);
@@ -109,8 +125,8 @@ public final class ValidationControlCenter {
 	{
 		File file = new File(fileForValidationPath);
 		String fileFullPath = file.getAbsolutePath();
-		String filePath = fileFullPath.substring(0, fileFullPath.lastIndexOf("/"));
-		filePath +="/ValidationResults.txt";
+		String filePath = fileFullPath.substring(0, fileFullPath.lastIndexOf(FS));
+		filePath += FS +"ValidationResults.txt";
 		
 		// Create file
         FileWriter fstream = new FileWriter(filePath, true);
@@ -177,5 +193,29 @@ public final class ValidationControlCenter {
 		default:
 			return false;
 		}
+	}
+	
+	public static boolean isWindows() {
+		 
+		return (OS.indexOf("win") >= 0);
+ 
+	}
+ 
+	public static boolean isMac() {
+ 
+		return (OS.indexOf("mac") >= 0);
+ 
+	}
+ 
+	public static boolean isUnix() {
+ 
+		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
+ 
+	}
+ 
+	public static boolean isSolaris() {
+ 
+		return (OS.indexOf("sunos") >= 0);
+ 
 	}
 }
